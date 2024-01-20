@@ -1,16 +1,10 @@
-first_number = input("Input first number:")
-first_number = float(first_number)
-second_number = input("Input second number: ")
-second_number = float(second_number)
+first_number = int(input("Input first number:"))
+second_number = int(input("Input second number: "))
 sum = first_number + second_number
-sum = str(sum)
 subtraction = first_number - second_number
-subtraction = str(subtraction)
 multiplication = first_number * second_number
-multiplication = str(multiplication)
 division = first_number / second_number
-division = str(division)
-print("Sum: " + sum)
-print("Subtraction: " + subtraction)
-print("Multiplication: " + multiplication)
-print("Division: " + division)
+print(f"The sum is: {sum}")
+print(f"The subtraction is: {subtraction}")
+print(f"The nultiplication is: {multiplication}")
+print(f"The division is: {division}")
