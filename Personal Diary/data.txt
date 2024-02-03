@@ -1,0 +1,6 @@
+Date / Time: Sat Feb  3 15:25:37 2024
+Dear Diary: This is a test diary entry, teating, testing, 1 2 3
+
+Date / Time: Sat Feb  3 15:26:01 2024
+Dear Diary: This is a second test diary entry, testing, testing, 1 2 3
+
