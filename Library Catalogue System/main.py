@@ -48,7 +48,6 @@ while req_active:
                     continue
                 else:
                     break
-            book_availability = book_availability.upper()
             book.update_avail(book_availability)
         else:
             print(f"Book with title '{book_title}' not found.")
