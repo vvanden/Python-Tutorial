@@ -9,9 +9,12 @@
 #Keeping a transaction history.
 
 class BankAccount(object):
-    def __init__(self, name, accountType, accountNumber, balance = 0):
+    def __init__(self, name, accountNumber, accountType, balance = 0):
+        self.name = name
+        self.accountNumber = accountNumber
+        self.accountType = accountType
+        self.balance = balance
         self.filename=str(self.accountNumber) + "_" + self.accountType + "_" + self.name + ".txt"
-        print(self.filename)
 
     def deposit():
         pass
@@ -19,7 +22,47 @@ class BankAccount(object):
     def withdrawl():
         pass
 
+    def record_transaction(self, type, amount):
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        transaction = f"{timestamp} - {type}: ${amount}\n"
+        with open(self.filename, "a") as file:
+            file.write(transaction)
+
+def clearterm():
+    os.system('CLS')
+
+def get_name():
+    while True:
+        name = input("Name: ")
+        if not name:
+            print("Invalid input. Please enter a valid name.")
+            continue
+        try:
+            return str(name)  # Ensure name is a string
+        except ValueError:
+            print("Invalid input. Please enter a valid name.")
+
+def get_account_type():
+    while True:
+        accountType = input("Account Type (C)hequing, (S)avings: ").lower()
+        if not accountType:
+            print("Invalid input. Please enter a valid account type.")
+            continue
+        elif accountType != "c" and accountType != "s":
+            print("Invalid input. Please enter a valid account type.")
+            continue
+        try:
+            return str(accountType)  # Ensure name is a string
+        except ValueError:
+            print("Invalid input. Please enter a valid name.")
+
+def generate_id():
+    accountNumber = uuid.uuid4()
+    return accountNumber
+
 import os
+import uuid
+import datetime
 
 #set working directory
 work_dir = 'C:/Users/vvanden/Documents/Python/Python-Tutorial/Bank Account'
@@ -36,6 +79,8 @@ req_active = True
 
 #look through requests while req_active = True
 while req_active:
+    input("Press Enter to continue...")
+    clearterm()
     print("*****************************************************")
     print("**                WELCOME TO MY BANK               **")
     print("*****************************************************")
@@ -50,8 +95,11 @@ while req_active:
     print("9: Exit")
     req = input("Selection: ").lower()
     if req == "1":
+        clearterm()
         print("**CREATE ACCOUNT**")
-        BankAccount("Janice", "Chequing", "99")
+        name = get_name()
+        accountType = get_account_type()
+        accountNumber = generate_id()
     if req == "2":
         print("**DEPOSIT**")
         pass
