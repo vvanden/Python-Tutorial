@@ -1,14 +1,4 @@
-#Objectives
-#Create account
-#Depositing money.
-#Withdrawing money.
-#Checking the balance.
-#Getting the account type.
-#Getting the account number.
-#Getting the holder name.
-#Keeping a transaction history.
-
-class BankAccount:
+class BankAccount(object):
     def __init__(self, name, accountNumber, accountType, balance = 0):
         self.name = name
         self.accountNumber = accountNumber
@@ -16,42 +6,64 @@ class BankAccount:
         self.balance = balance
         self.filename=str(self.accountNumber) + "_" + self.accountType + "_" + self.name + ".txt"
 
-    def record_transaction(self, type, amount):
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        transaction = f"{timestamp} - {type}: ${amount}\n"
-        with open(self.filename, "a") as file:
-            file.write(transaction)
+def read_transactions(filename):
+    try:
+        with open(filename, "r") as file:  # Use with to ensure file closing
+            if os.stat(filename).st_size == 0:
+                print("Transactions history is empty.")
+            else:
+                print(file.read())
+                file.close()
+    except FileNotFoundError:
+        print("Error, there is no transaction history for this account.")
 
-    def read_transactions():
-        try:
-            file=open(self.filename, "r") ## open a file in read mode
-        except FileNotFoundError:
-            print("Wrong file or file path")
-        if os.stat(self.filename).st_size == 0:
-            print("Transactions history is empty.")
-        else:
-            print(file.read())
-        file.close()
+def record_transaction(type, amount, filename):
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    transaction = f"{timestamp} - {type}: ${amount}\n"
+    with open(filename, "a") as file:
+        file.write(transaction)
 
-def deposit(self, amount):
-    amount = input("Deposit Amount: ")
-
-def withdrawl():
-    pass
+def deposit(accountNumber, amount):
+    for account in accounts:
+        if account.accountNumber == accountNumber:
+            cur_balance = account.balance
+            account.balance = cur_balance + amount
+            record_transaction("Deposit", amount, account.filename)
+            print("Deposit complete.")
+    return None
+    
+def withdrawl(accountNumber, amount):
+    for account in accounts:
+        if account.accountNumber == accountNumber:
+            cur_balance = account.balance
+            account.balance = cur_balance - amount
+            record_transaction("Withdrawl", amount, account.filename)
+            print("Withdrawl complete.")
+    return None
 
 def clearterm():
     os.system('CLS')
 
 def get_name():
     while True:
-        name = input("Name: ")
-        if not name:
-            print("Invalid input. Please enter a valid name.")
+        first_name = input("First Name: ")
+        if not first_name:
+            print("Invalid input. Please enter a valid first name.")
             continue
         try:
-            return str(name)  # Ensure name is a string
+            pass
         except ValueError:
-            print("Invalid input. Please enter a valid name.")
+            print("Invalid input. Please enter a valid first name.")
+        last_name = input("Last Name: ")
+        if not last_name:
+            print("Invalid input. Please enter a valid last name.")
+            continue
+        try:
+            pass
+        except ValueError:
+            print("Invalid input. Please enter a valid last name.")
+        name = first_name + ", " + last_name
+        return str(name)  # Ensure name is a string
 
 def get_account_type():
     while True:
@@ -67,7 +79,7 @@ def get_account_type():
                 accountType = "Chequing"
             else:
                 accountType = "Savings"
-            return str(accountType)  # Ensure name is a string
+            return str(accountType)
         except ValueError:
             print("Invalid input. Please enter a valid name.")
 
@@ -80,7 +92,7 @@ def find_account_by_name(name):
     for account in accounts:
         if account.name == name:
             return account
-    return None
+    return None   
 
 def generate_id():
     accountNumber = uuid.uuid4()
@@ -89,16 +101,6 @@ def generate_id():
 import os
 import uuid
 import datetime
-
-#set working directory
-work_dir = 'C:/Users/vvanden/Documents/Python/Python-Tutorial/Bank Account'
-
-#confirm working directory
-try:
-    os.chdir(work_dir)
-except WindowsError:
-    print("WindowsError, confirm folder locaiton")
-    quit()
 
 #set initial state
 req_active = True
@@ -113,11 +115,17 @@ account = BankAccount("NULL", "NULL", "NULL")
 while req_active:
     input("Press Enter to continue...")
     clearterm()
-    print("*****************************************************")
-    print("**                WELCOME TO MY BANK               **")
-    print("*****************************************************")
+    if (account.accountNumber == "NULL"):
+        print("*******************")
+        print("WELCOME TO MY BANK")
+        print("*******************")
+    else:
+        print("*******************")
+        print("WELCOME TO MY BANK")
+        print(f"Hi: {account.name}")
+        print("*******************")
     print("1: Create account")
-    print("2: Select account")
+    print("2: Select account by Name")
     print("3: Deposit")
     print("4: Withdrawl")
     print("5: View Balance")
@@ -137,28 +145,66 @@ while req_active:
         accounts.append(BankAccount(name_upper, accountNumber, accountType))
     if req == "2":
         clearterm()
-        print("**SELECT ACCOUNT**")
-        account_name = input ("Input account name: ")
+        print("**SELECT ACCOUNT BY NAME**")
+        account_name = get_name()
         account = find_account_by_name(account_name)
         if account:
             print("Account Selected:")
             print(f"Account Name: {account.name}")
             print(f"Account Type: {account.accountType}")
+            print(f"Account Number: {account.accountNumber}")
         else:
-            print(f"Account with name '{name}' not found.")
+            print(f"Account with name not found.")
     if req == "3":
         clearterm()
         print("**DEPOSIT**")
-        accounts.record_transaction("deposit", amount)
+        if account.accountNumber == "NULL":
+            print(f"Account not found, please select account.")
+            continue
+        else:
+            try:
+                amount = float(input("Deposit amount: "))
+            except ValueError:
+                print("Sorry, I didn't understand that.")
+                continue
+            except:
+                raise Exception("Unexpected error.")
+        
+        if amount > 0:
+            deposit(account.accountNumber, amount)
+        else:
+            print("Deposit amount must be at least $0.01.")
+            continue
     if req == "4":
         clearterm()
         print("**WITHDRAWL**")
-        pass
+        if account.accountNumber == "NULL":
+            print(f"Account not found, please select account.")
+            continue
+        else:
+            try:
+                amount = float(input("Withdrawl amount: "))
+            except ValueError:
+                print("Sorry, I didn't understand that.")
+                continue
+            except:
+                raise Exception("Unexpected error.")
+        
+        if amount > 0:
+            if account.balance >= amount:
+                withdrawl(account.accountNumber, amount)
+            else:
+                print(f"Insufficient funds, your current account balance is: ${account.balance}")
+                continue
+        else:
+            print("Withdrawal amount must be at least $0.01.")
+            continue
+
     if req == "5":
         clearterm()
         print("**VIEW BALANCE**")
         if account is not None:
-            print(f"User ID: ${account.balance}")
+            print(f"Balance: ${account.balance}")
         else:
             print(f"Account not selected, please create or select an account.")
     if req == "6":
@@ -185,7 +231,7 @@ while req_active:
     if req == "9":
         clearterm()
         print("**VIEW TRANSACTION HISTORY**")
-        read_transactions()
+        read_transactions(account.filename)
     elif req == "10":
         clearterm()
         print("**EXIT**")
